@@ -2,7 +2,7 @@
 
 ## Working Group
 
-| Name Surname (initials) | GUID                                     |
+| Name Surname (initials) | GitHub ID                                |
 | ----------------------- | ---------------------------------------- |
-| Patryk Nowacki          | `{FD9D086C-532F-4AAC-BB99-69D7798837D8}` |
-| Jakub Stepniak          | `{3B99D5E9-425D-4E68-9839-6DFD323BCFAA}` |
+| Patryk Nowacki          | PatrykGhost                              |
+| Jakub Stepniak          | jakub0ste                                |
