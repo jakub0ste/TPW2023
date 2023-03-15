@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPW_PN_JS", "TPW_PN_JS\TPW_PN_JS.csproj", "{5F66930C-81C2-4A11-BA3A-517BAC1BF404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{1D1732F5-984D-4280-A423-8C066AEB5642}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F66930C-81C2-4A11-BA3A-517BAC1BF404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F66930C-81C2-4A11-BA3A-517BAC1BF404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F66930C-81C2-4A11-BA3A-517BAC1BF404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F66930C-81C2-4A11-BA3A-517BAC1BF404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D1732F5-984D-4280-A423-8C066AEB5642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D1732F5-984D-4280-A423-8C066AEB5642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D1732F5-984D-4280-A423-8C066AEB5642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D1732F5-984D-4280-A423-8C066AEB5642}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6454451C-CAE7-4670-915D-97C970E4D9D1}
+	EndGlobalSection
+EndGlobal
