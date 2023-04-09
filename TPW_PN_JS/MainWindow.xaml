@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:TPW_PN_JS"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBlock x:Name="HelloWorldText" Text="Hello World" />
-    </Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Button x:Name="StartButton" Content="Start" Click="StartButton_Click" HorizontalAlignment="Center"/>
+		<Canvas x:Name="BallCanvas" Grid.Row="1" Background="White" />
+	</Grid>
 </Window>
+
