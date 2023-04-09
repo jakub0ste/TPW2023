@@ -3,8 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+
 
 namespace TPW_PN_JS
 {
@@ -12,11 +17,34 @@ namespace TPW_PN_JS
     {
         private List<Kulka> list;
         private Random random = new Random();
+        private DispatcherTimer timer;
 
         public MainWindow()
         {
             list = new List<Kulka>();
             InitializeComponent();
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(33); // Przykładowy interwał 33ms = ~30 klatek na sekundę
+            timer.Tick += Timer_Tick;
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            BallCanvas.Children.Clear();
+
+            foreach (var ball in list)
+            {
+                ball.AktualizujPozycje(Boundary);
+                var ellipse = new Ellipse
+                {
+                    Width = 20 * 2,
+                    Height = 20 * 2,
+                    Fill = Brushes.Blue
+                };
+
+                Canvas.SetLeft(ellipse, ball.X - 20);
+                Canvas.SetTop(ellipse, ball.Y - 20);
+                BallCanvas.Children.Add(ellipse);
+            }
         }
 
         private double LosowaPredkosc()
@@ -58,7 +86,21 @@ namespace TPW_PN_JS
             else
             {
                 MessageBox.Show("Wprowadź poprawną liczbę kulek.");
+
             }
+            // Inicjalizacja i losowe rozmieszczenie kul
+            int ballCount = Convert.ToInt32(BallCountTextBox.Text);
+            list.Clear();
+            Random rnd = new Random();
+            for (int i = 0; i < ballCount; i++)
+            {
+                double x = rnd.Next((int)Boundary.Margin.Left + 20, (int)(Boundary.Margin.Left + Boundary.Width) - 20);
+                double y = rnd.Next((int)Boundary.Margin.Top + 20, (int)(Boundary.Margin.Top + Boundary.Height) - 20);
+                double velocityX = rnd.NextDouble() * 10 - 5;
+                double velocityY = rnd.NextDouble() * 10 - 5;
+                list.Add(new Kulka(x, y, velocityX, velocityY));
+            }
+            timer.Start();
         }
     }
 
