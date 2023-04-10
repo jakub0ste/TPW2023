@@ -9,31 +9,35 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TPW_PN_JS.Dane;
+using TPW_PN_JS.Logika;
 
 
-namespace TPW_PN_JS
+namespace TPW_PN_JS.View
 {
     public partial class MainWindow : Window
     {
         private List<Kulka> list;
         private Random random = new Random();
         private DispatcherTimer timer;
+        private IKulkaService kulkaService = new KulkaService();
 
         public MainWindow()
         {
             list = new List<Kulka>();
             InitializeComponent();
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(1); // Przykładowy interwał 33ms = ~30 klatek na sekundę
+            timer.Interval = TimeSpan.FromMilliseconds(2);
             timer.Tick += Timer_Tick;
         }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             BallCanvas.Children.Clear();
 
             foreach (var ball in list)
             {
-                ball.AktualizujPozycje(Boundary);
+                kulkaService.AktualizujPozycje(ball, Boundary);
                 var ellipse = new Ellipse
                 {
                     Width = 20 * 2,
@@ -52,7 +56,7 @@ namespace TPW_PN_JS
             return (random.NextDouble() * 2 - 1) * 5;
         }
 
-        private void AddBallsButton_Click(object sender, RoutedEventArgs e)
+        public void AddBallsButton_Click(object sender, RoutedEventArgs e)
         {
             if (int.TryParse(BallCountTextBox.Text, out int numberOfBalls))
             {
@@ -103,52 +107,4 @@ namespace TPW_PN_JS
             timer.Start();
         }
     }
-
-    public class Kulka
-    {
-        public double X { get; private set; }
-        public double Y { get; private set; }
-        public double VelocityX
-        {
-            get; set;
-        }
-        public double VelocityY { get; set; }
-        public Kulka(double x, double y, double velocityX, double velocityY)
-        {
-            X = x;
-            Y = y;
-            VelocityX = velocityX;
-            VelocityY = velocityY;
-        }
-
-        public void AktualizujPozycje(Rectangle boundary)
-        {
-            double leftBoundary = boundary.Margin.Left + 20;
-            double topBoundary = boundary.Margin.Top + 20;
-            double rightBoundary = leftBoundary + boundary.Width - 40;
-            double bottomBoundary = topBoundary + boundary.Height - 40;
-
-            double newX = X + VelocityX;
-            double newY = Y + VelocityY;
-
-            if (newX >= leftBoundary && newX <= rightBoundary)
-            {
-                X = newX;
-            }
-            else
-            {
-                VelocityX = -VelocityX;
-            }
-
-            if (newY >= topBoundary && newY <= bottomBoundary)
-            {
-                Y = newY;
-            }
-            else
-            {
-                VelocityY = -VelocityY;
-            }
-        }
-    }
 }
-
