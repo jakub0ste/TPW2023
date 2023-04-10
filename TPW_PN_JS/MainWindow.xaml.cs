@@ -24,7 +24,7 @@ namespace TPW_PN_JS
             list = new List<Kulka>();
             InitializeComponent();
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(33); // Przykładowy interwał 33ms = ~30 klatek na sekundę
+            timer.Interval = TimeSpan.FromMilliseconds(1); // Przykładowy interwał 33ms = ~30 klatek na sekundę
             timer.Tick += Timer_Tick;
         }
         private void Timer_Tick(object sender, EventArgs e)
