@@ -63,8 +63,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="Logika\Kulka.cs" />
+    <Compile Include="Prezentacja\ViewModel\MainViewModel.cs" />
+    <Compile Include="Prezentacja\ViewModel\RelayCommand.cs" />
     <Compile Include="Prezentacja\View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -99,7 +100,6 @@
   <ItemGroup>
     <Folder Include="Dane\" />
     <Folder Include="Prezentacja\Model\" />
-    <Folder Include="Prezentacja\ViewModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
