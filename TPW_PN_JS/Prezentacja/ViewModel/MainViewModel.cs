@@ -49,7 +49,7 @@ namespace WpfApp1.Prezentacja.ViewModel
         {
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(2) // Ustaw interwał na 60 klatek na sekundę
+                Interval = TimeSpan.FromMilliseconds(2)
             };
             _timer.Tick += OnTimerTick;
         }

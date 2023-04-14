@@ -17,8 +17,8 @@ namespace TPW_PN_JS.Prezentacja.Model
 
             for (int i = 0; i < ballCount; i++)
             {
-                double x = random.NextDouble() * (430);
-                double y = random.NextDouble() * (430);
+                double x = random.NextDouble() * (400);
+                double y = random.NextDouble() * (400);
 
                 balls.Add(new Ball
                 {
