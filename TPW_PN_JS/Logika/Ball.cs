@@ -7,8 +7,8 @@ namespace TPW_PN_JS.Logika
     {
         private double _x;
         private double _y;
-        private double _speed;
-
+        private double _speedX;
+        private double _speedY;
         public double X
         {
             get => _x;
@@ -29,13 +29,23 @@ namespace TPW_PN_JS.Logika
             }
         }
 
-        public double Speed
+        public double SpeedX
         {
-            get => _speed;
+            get => _speedX;
             set
             {
-                _speed = value;
-                OnPropertyChanged(nameof(Speed));
+                _speedX = value;
+                OnPropertyChanged(nameof(SpeedX));
+            }
+        }
+
+        public double SpeedY
+        {
+            get => _speedY;
+            set
+            {
+                _speedY = value;
+                OnPropertyChanged(nameof(SpeedY));
             }
         }
 
