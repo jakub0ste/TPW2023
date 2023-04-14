@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
+using TPW_PN_JS.Dane;
 
 namespace TPW_PN_JS.Logika
 {
-    public class Kulka : INotifyPropertyChanged
+    public class Ball : IBall
     {
         private double _x;
         private double _y;
-        private double _predkosc;
+        private double _speed;
 
         public double X
         {
@@ -17,6 +18,7 @@ namespace TPW_PN_JS.Logika
                 OnPropertyChanged(nameof(X));
             }
         }
+
         public double Y
         {
             get => _y;
@@ -26,13 +28,14 @@ namespace TPW_PN_JS.Logika
                 OnPropertyChanged(nameof(Y));
             }
         }
-        public double Predkosc
+
+        public double Speed
         {
-            get => _predkosc;
+            get => _speed;
             set
             {
-                _predkosc = value;
-                OnPropertyChanged(nameof(Predkosc));
+                _speed = value;
+                OnPropertyChanged(nameof(Speed));
             }
         }
 
