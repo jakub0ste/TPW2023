@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Dane\IBall.cs" />
     <Compile Include="Logika\Ball.cs" />
+    <Compile Include="Prezentacja\Model\BallManager.cs" />
     <Compile Include="Prezentacja\ViewModel\MainViewModel.cs" />
     <Compile Include="Prezentacja\ViewModel\RelayCommand.cs" />
     <Compile Include="Prezentacja\View\MainWindow.xaml.cs">
@@ -98,8 +99,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Prezentacja\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

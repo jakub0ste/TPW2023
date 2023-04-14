@@ -21,14 +21,19 @@ namespace UnitTestProject1
             ball.X = 10;
             Assert.AreEqual(nameof(Ball.X), changedPropertyName);
             Assert.AreEqual(ball.X, 10);
+
             ball.Y = 5;
             Assert.AreEqual(nameof(Ball.Y), changedPropertyName);
             Assert.AreEqual(ball.Y, 5);
-            ball.Speed = 2;
-            Assert.AreEqual(nameof(Ball.Speed), changedPropertyName);
-            Assert.AreEqual(ball.Speed, 2);
 
+            ball.SpeedX = 2;
+            Assert.AreEqual(nameof(Ball.SpeedX), changedPropertyName);
+            Assert.AreEqual(ball.SpeedX, 2);
 
+            ball.SpeedY = 3;
+            Assert.AreEqual(nameof(Ball.SpeedY), changedPropertyName);
+            Assert.AreEqual(ball.SpeedY, 3);
         }
     }
 }
+
