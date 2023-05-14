@@ -10,6 +10,8 @@ namespace TPW_PN_JS.Prezentacja.Model
 {
     public class BallManager
     {
+        private double ballDiameter = 20;
+
         public ObservableCollection<Ball> GenerateBalls(int ballCount)
         {
             ObservableCollection<Ball> balls = new ObservableCollection<Ball>();
@@ -17,8 +19,8 @@ namespace TPW_PN_JS.Prezentacja.Model
 
             for (int i = 0; i < ballCount; i++)
             {
-                double x = random.NextDouble() * (400);
-                double y = random.NextDouble() * (400);
+                double x = random.NextDouble() * (430 - ballDiameter);
+                double y = random.NextDouble() * (430 - ballDiameter);
 
                 balls.Add(new Ball
                 {
@@ -32,30 +34,52 @@ namespace TPW_PN_JS.Prezentacja.Model
             return balls;
         }
 
-        public void UpdateBallsPosition(ObservableCollection<Ball> balls, double deltaTime)
+        public async Task UpdateBallsPosition(ObservableCollection<Ball> balls, double deltaTime)
         {
             const double boundary = 400;
+            List<Task> tasks = new List<Task>();
 
             foreach (var ball in balls)
             {
-                double newX = ball.X + ball.SpeedX * deltaTime;
-                double newY = ball.Y + ball.SpeedY * deltaTime;
-
-                if (newX < 0 || newX + 20 > boundary)
+                tasks.Add(Task.Run(() =>
                 {
-                    ball.SpeedX = -ball.SpeedX;
-                    newX = ball.X + ball.SpeedY * deltaTime;
-                }
+                    double newX = ball.X + ball.SpeedX * deltaTime;
+                    double newY = ball.Y + ball.SpeedY * deltaTime;
 
-                if (newY < 0 || newY + 20 > boundary)
-                {
-                    ball.SpeedY = -ball.SpeedY;
-                    newY = ball.Y + ball.SpeedY * deltaTime;
-                }
+                    if (newX < 0 || newX + ballDiameter > boundary)
+                    {
+                        ball.SpeedX = -ball.SpeedX;
+                        newX = ball.X + ball.SpeedX * deltaTime;
+                    }
 
-                ball.X = newX;
-                ball.Y = newY;
+                    if (newY < 0 || newY + ballDiameter > boundary)
+                    {
+                        ball.SpeedY = -ball.SpeedY;
+                        newY = ball.Y + ball.SpeedY * deltaTime;
+                    }
+
+                    foreach (var otherBall in balls.Where(b => b != ball))
+                    {
+                        double dx = otherBall.X - newX;
+                        double dy = otherBall.Y - newY;
+                        double distance = Math.Sqrt(dx * dx + dy * dy);
+
+                        if (distance < ballDiameter)
+                        {
+                            ball.SpeedX = -ball.SpeedX;
+                            ball.SpeedY = -ball.SpeedY;
+                            newX = ball.X + ball.SpeedX * deltaTime;
+                            newY = ball.Y + ball.SpeedY * deltaTime;
+                            break;
+                        }
+                    }
+
+                    ball.X = newX;
+                    ball.Y = newY;
+                }));
             }
+
+            await Task.WhenAll(tasks);
         }
     }
 }

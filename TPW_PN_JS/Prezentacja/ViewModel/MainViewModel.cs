@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using TPW_PN_JS.Logika;
 using TPW_PN_JS.Prezentacja.ViewModel;
 using TPW_PN_JS.Prezentacja.Model;
+using System.Threading;
 
 namespace WpfApp1.Prezentacja.ViewModel
 {
@@ -49,22 +50,47 @@ namespace WpfApp1.Prezentacja.ViewModel
         {
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(2)
+                Interval = TimeSpan.FromMilliseconds(2) // Ustaw interwał na 60 klatek na sekundę
             };
             _timer.Tick += OnTimerTick;
         }
 
-        private void Start()
+        //private object _ballsLock = new object();
+
+        private SemaphoreSlim _ballsLock = new SemaphoreSlim(1, 1);
+
+        private async void Start()
         {
-            _timer.Stop();
-            Balls = _ballManager.GenerateBalls(BallCount);
-            _timer.Start();
+            await _ballsLock.WaitAsync();
+            try
+            {
+                _timer.Stop();
+                Balls = _ballManager.GenerateBalls(BallCount);
+                _timer.Start();
+            }
+            finally
+            {
+                _ballsLock.Release();
+            }
         }
 
-        private void OnTimerTick(object sender, EventArgs e)
+        private async void OnTimerTick(object sender, EventArgs e)
         {
-            _ballManager.UpdateBallsPosition(Balls, 0.5);
+            if (_ballsLock.CurrentCount > 0)
+            {
+                await _ballsLock.WaitAsync();
+                try
+                {
+                    await _ballManager.UpdateBallsPosition(Balls, 0.5);
+                }
+                finally
+                {
+                    _ballsLock.Release();
+                }
+            }
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
