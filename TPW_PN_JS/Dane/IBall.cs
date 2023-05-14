@@ -8,6 +8,8 @@ namespace TPW_PN_JS.Dane
 
         double Y { get; set; }
 
+        double Mass { get; set; }
+
         double SpeedX { get; set; }
 
         double SpeedY { get; set; }

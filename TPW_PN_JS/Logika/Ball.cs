@@ -9,6 +9,7 @@ namespace TPW_PN_JS.Logika
         private double _y;
         private double _speedX;
         private double _speedY;
+        private double _mass;
         public double X
         {
             get => _x;
@@ -48,6 +49,16 @@ namespace TPW_PN_JS.Logika
                 OnPropertyChanged(nameof(SpeedY));
             }
         }
+
+        public double Mass
+        {
+            get => _mass;
+            set
+            {
+                _mass = value;
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

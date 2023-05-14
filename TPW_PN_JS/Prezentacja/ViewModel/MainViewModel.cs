@@ -50,44 +50,24 @@ namespace WpfApp1.Prezentacja.ViewModel
         {
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(2) // Ustaw interwał na 60 klatek na sekundę
+                Interval = TimeSpan.FromMilliseconds(16) // Ustaw interwał na 60 klatek na sekundę
             };
             _timer.Tick += OnTimerTick;
         }
 
-        //private object _ballsLock = new object();
-
-        private SemaphoreSlim _ballsLock = new SemaphoreSlim(1, 1);
-
         private async void Start()
         {
-            await _ballsLock.WaitAsync();
-            try
-            {
-                _timer.Stop();
-                Balls = _ballManager.GenerateBalls(BallCount);
-                _timer.Start();
-            }
-            finally
-            {
-                _ballsLock.Release();
-            }
+            _timer.Stop();
+            var newBalls = _ballManager.GenerateBalls(BallCount);
+            Balls = new ObservableCollection<Ball>(newBalls);
+            _timer.Start();
         }
 
         private async void OnTimerTick(object sender, EventArgs e)
         {
-            if (_ballsLock.CurrentCount > 0)
-            {
-                await _ballsLock.WaitAsync();
-                try
-                {
-                    await _ballManager.UpdateBallsPosition(Balls, 0.5);
-                }
-                finally
-                {
-                    _ballsLock.Release();
-                }
-            }
+            var newBalls = new ObservableCollection<Ball>(Balls);
+            await _ballManager.UpdateBallsPosition(newBalls, 0.5);
+            Balls = newBalls;
         }
 
 
