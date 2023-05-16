@@ -40,16 +40,6 @@ namespace TPW_PN_JS.Logika
             }
         }
 
-        public double SpeedY
-        {
-            get => _speedY;
-            set
-            {
-                _speedY = value;
-                OnPropertyChanged(nameof(SpeedY));
-            }
-        }
-
         public double Mass
         {
             get => _mass;
@@ -59,6 +49,15 @@ namespace TPW_PN_JS.Logika
             }
         }
 
+        public double SpeedY
+        {
+            get => _speedY;
+            set
+            {
+                _speedY = value;
+                OnPropertyChanged(nameof(SpeedY));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

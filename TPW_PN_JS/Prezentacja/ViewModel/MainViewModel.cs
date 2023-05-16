@@ -6,7 +6,6 @@ using System.Windows.Threading;
 using TPW_PN_JS.Logika;
 using TPW_PN_JS.Prezentacja.ViewModel;
 using TPW_PN_JS.Prezentacja.Model;
-using System.Threading;
 
 namespace WpfApp1.Prezentacja.ViewModel
 {
@@ -50,27 +49,22 @@ namespace WpfApp1.Prezentacja.ViewModel
         {
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(16) // Ustaw interwał na 60 klatek na sekundę
+                Interval = TimeSpan.FromMilliseconds(2)
             };
             _timer.Tick += OnTimerTick;
         }
 
-        private async void Start()
+        private void Start()
         {
             _timer.Stop();
-            var newBalls = _ballManager.GenerateBalls(BallCount);
-            Balls = new ObservableCollection<Ball>(newBalls);
+            Balls = _ballManager.GenerateBalls(BallCount);
             _timer.Start();
         }
 
-        private async void OnTimerTick(object sender, EventArgs e)
+        private void OnTimerTick(object sender, EventArgs e)
         {
-            var newBalls = new ObservableCollection<Ball>(Balls);
-            await _ballManager.UpdateBallsPosition(newBalls, 0.5);
-            Balls = newBalls;
+            _ballManager.UpdateBallsPosition(Balls, 0.5);
         }
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
