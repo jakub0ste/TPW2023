@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using TPW_PN_JS.Logika;
 using TPW_PN_JS.Prezentacja.Model;
 
@@ -20,7 +21,7 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
-        public void TestUpdateBallsPosition()
+        public async Task TestUpdateBallsPosition()
         {
             BallManager ballManager = new BallManager();
             int ballCount = 10;
@@ -34,7 +35,7 @@ namespace UnitTestProject1
                 SpeedY = ball.SpeedY
             }));
 
-            ballManager.UpdateBallsPosition(balls, 0.5);
+            await ballManager.UpdateBallsPositionAsync(balls, 0.5);
 
             bool positionsChanged = false;
             for (int i = 0; i < balls.Count; i++)
