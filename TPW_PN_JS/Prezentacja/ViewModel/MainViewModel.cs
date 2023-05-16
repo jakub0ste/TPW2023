@@ -61,9 +61,10 @@ namespace WpfApp1.Prezentacja.ViewModel
             _timer.Start();
         }
 
-        private void OnTimerTick(object sender, EventArgs e)
+
+        private async void OnTimerTick(object sender, EventArgs e)
         {
-            _ballManager.UpdateBallsPosition(Balls, 0.5);
+            await _ballManager.UpdateBallsPositionAsync(Balls, 0.5);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

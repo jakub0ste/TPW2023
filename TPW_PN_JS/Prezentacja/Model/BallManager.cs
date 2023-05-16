@@ -33,7 +33,7 @@ namespace TPW_PN_JS.Prezentacja.Model
             return balls;
         }
 
-        public void UpdateBallsPosition(ObservableCollection<Ball> balls, double deltaTime)
+        public async Task UpdateBallsPositionAsync(ObservableCollection<Ball> balls, double deltaTime)
         {
             const double boundary = 400;
             const double ballSize = 20; // assuming ball size is 20
