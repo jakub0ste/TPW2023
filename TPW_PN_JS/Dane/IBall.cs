@@ -13,5 +13,7 @@ namespace TPW_PN_JS.Dane
         double Mass { get; set; }
 
         double SpeedY { get; set; }
+
+        //object Lock { get; set; }
     }
 }

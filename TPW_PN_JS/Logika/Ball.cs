@@ -59,6 +59,8 @@ namespace TPW_PN_JS.Logika
             }
         }
 
+        public object Lock { get; internal set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

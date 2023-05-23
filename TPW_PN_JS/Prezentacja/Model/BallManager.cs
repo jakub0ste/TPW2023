@@ -5,14 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TPW_PN_JS.Logika;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace TPW_PN_JS.Prezentacja.Model
 {
     public class BallManager
     {
-        public ObservableCollection<Ball> GenerateBalls(int ballCount)
+        private ConcurrentBag<Ball> balls = new ConcurrentBag<Ball>(); 
+        private const double boundary = 400;
+        private const double ballSize = 20;
+
+        public ConcurrentBag<Ball> GenerateAndStartBalls(int ballCount) //Pozwala na bezpieczne dodawanie i pobieranie elementów z różnych wątków.
         {
-            ObservableCollection<Ball> balls = new ObservableCollection<Ball>();
             Random random = new Random();
 
             for (int i = 0; i < ballCount; i++)
@@ -20,30 +25,37 @@ namespace TPW_PN_JS.Prezentacja.Model
                 double x = random.NextDouble() * (400);
                 double y = random.NextDouble() * (400);
 
-                balls.Add(new Ball
+                Ball ball = new Ball
                 {
                     X = x,
                     Y = y,
                     SpeedX = random.Next(-100, 100) / 100.0,
                     SpeedY = random.Next(-100, 100) / 100.0,
-                    Mass = 1
-                });
+                    Mass = 1,
+                    //jak go dodać do Iball
+                    Lock = new object()  // Each ball has a lock object
+                };
+
+                balls.Add(ball);
+                                                                                            //Thread starting //Concurrent programming by Thread class
+                Thread ballThread = new Thread(() => UpdateBallPosition(ball));
+                ballThread.Start();
             }
 
             return balls;
         }
 
-        public async Task UpdateBallsPositionAsync(ObservableCollection<Ball> balls, double deltaTime)
+        private void UpdateBallPosition(Ball ball)
         {
-            const double boundary = 400;
-            const double ballSize = 20; // assuming ball size is 20
-
-            foreach (var ball in balls)
+            while (true)
             {
+                double deltaTime = 0.5;
                 double newX = ball.X + ball.SpeedX * deltaTime;
                 double newY = ball.Y + ball.SpeedY * deltaTime;
 
-                if (newX < 0 || newX + ballSize > boundary)
+                lock (ball.Lock) // Only one thread can enter this block at a time
+
+                    if (newX < 0 || newX + ballSize > boundary)
                 {
                     ball.SpeedX = -ball.SpeedX;
                     newX = ball.X + ball.SpeedX * deltaTime;
@@ -57,51 +69,52 @@ namespace TPW_PN_JS.Prezentacja.Model
 
                 ball.X = newX;
                 ball.Y = newY;
-            }
 
-            for (int i = 0; i < balls.Count; i++)
-            {
-                for (int j = i + 1; j < balls.Count; j++)
+                foreach (var otherBall in balls)
                 {
-                    Ball ball1 = balls[i];
-                    Ball ball2 = balls[j];
-
-                    double dx = ball1.X - ball2.X;
-                    double dy = ball1.Y - ball2.Y;
-                    double distance = Math.Sqrt(dx * dx + dy * dy);
-
-                    if (distance < ballSize)
+                    if (otherBall != ball)
                     {
-                        double angle = Math.Atan2(dy, dx);
-                        double sin = Math.Sin(angle);
-                        double cos = Math.Cos(angle);
+                        double dx = ball.X - otherBall.X;
+                        double dy = ball.Y - otherBall.Y;
+                        double distance = Math.Sqrt(dx * dx + dy * dy);
 
-                        double ball1RotatedX = 0;
-                        double ball2RotatedX = distance;
-                        double ball1RotatedSpeedX = ball1.SpeedX * cos + ball1.SpeedY * sin;
-                        double ball2RotatedSpeedX = ball2.SpeedX * cos + ball2.SpeedY * sin;
-                        double ball1RotatedSpeedY = ball1.SpeedY * cos - ball1.SpeedX * sin;
-                        double ball2RotatedSpeedY = ball2.SpeedY * cos - ball2.SpeedX * sin;
+                        if (distance < ballSize)
+                        {
+                            double angle = Math.Atan2(dy, dx);
+                            double sin = Math.Sin(angle);
+                            double cos = Math.Cos(angle);
 
-                        double ball1FinalSpeedX = ((ball1.Mass - ball2.Mass) * ball1RotatedSpeedX + 2 * ball2.Mass * ball2RotatedSpeedX) / (ball1.Mass + ball2.Mass);
-                        double ball2FinalSpeedX = (2 * ball1.Mass * ball1RotatedSpeedX + (ball2.Mass - ball1.Mass) * ball2RotatedSpeedX) / (ball1.Mass + ball2.Mass);
+                            // Rotating the velocity vectors
 
-                        ball1.SpeedX = ball1FinalSpeedX * cos - ball1RotatedSpeedY * sin;
-                        ball1.SpeedY = ball1FinalSpeedX * sin + ball1RotatedSpeedY * cos;
-                        ball2.SpeedX = ball2FinalSpeedX * cos - ball2RotatedSpeedY * sin;
-                        ball2.SpeedY = ball2FinalSpeedX * sin + ball2RotatedSpeedY * cos;
+                            double ballRotatedSpeedX = ball.SpeedX * cos + ball.SpeedY * sin;
+                            double otherBallRotatedSpeedX = otherBall.SpeedX * cos + otherBall.SpeedY * sin;
+                            double ballRotatedSpeedY = ball.SpeedY * cos - ball.SpeedX * sin;
+                            double otherBallRotatedSpeedY = otherBall.SpeedY * cos - otherBall.SpeedX * sin;
 
-                        // Add a small displacement to ensure balls do not stick
-                        double overlap = 0.5 * (distance - ballSize);
-                        ball1.X -= overlap * (ball1.X - ball2.X) / distance;
-                        ball1.Y -= overlap * (ball1.Y - ball2.Y) / distance;
-                        ball2.X += overlap * (ball1.X - ball2.X) / distance;
-                        ball2.Y += overlap * (ball1.Y - ball2.Y) / distance;
+                            // Updating the velocities after the collision
+
+                            double ballFinalSpeedX = ((ball.Mass - otherBall.Mass) * ballRotatedSpeedX + 2 * otherBall.Mass * otherBallRotatedSpeedX) / (ball.Mass + otherBall.Mass);
+                            double otherBallFinalSpeedX = (2 * ball.Mass * ballRotatedSpeedX + (otherBall.Mass - ball.Mass) * otherBallRotatedSpeedX) / (ball.Mass + otherBall.Mass);
+
+                            ball.SpeedX = ballFinalSpeedX * cos - ballRotatedSpeedY * sin;
+                            ball.SpeedY = ballFinalSpeedX * sin + ballRotatedSpeedY * cos;
+                            otherBall.SpeedX = otherBallFinalSpeedX * cos - otherBallRotatedSpeedY * sin;
+                            otherBall.SpeedY = otherBallFinalSpeedX * sin + otherBallRotatedSpeedY * cos;
+
+                            // Displacing the balls slightly to avoid them from sticking to each other
+
+                            double overlap = 0.5 * (distance - ballSize);
+                            ball.X -= overlap * (ball.X - otherBall.X) / distance;
+                            ball.Y -= overlap * (ball.Y - otherBall.Y) / distance;
+                            otherBall.X += overlap * (ball.X - otherBall.X) / distance;
+                            otherBall.Y += overlap * (ball.Y - otherBall.Y) / distance;
+                        }
                     }
+
+                    Thread.Sleep(2); //TaskParallerLibrary -> biblioteka
                 }
             }
         }
-
-
     }
 }
+

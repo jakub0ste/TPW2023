@@ -51,21 +51,26 @@ namespace WpfApp1.Prezentacja.ViewModel
             {
                 Interval = TimeSpan.FromMilliseconds(2)
             };
-            _timer.Tick += OnTimerTick;
+            //_timer.Tick += OnTimerTick;
         }
 
         private void Start()
         {
             _timer.Stop();
-            Balls = _ballManager.GenerateBalls(BallCount);
+
+            _ballManager = new BallManager(); // This will create a new BallManager instance
+
+            Balls = new ObservableCollection<Ball>(_ballManager.GenerateAndStartBalls(BallCount));
+
             _timer.Start();
         }
 
 
-        private async void OnTimerTick(object sender, EventArgs e)
-        {
-            await _ballManager.UpdateBallsPositionAsync(Balls, 0.5);
-        }
+
+        /* private void OnTimerTick(object sender, EventArgs e)
+         {
+             // No need to call UpdateBallsPosition here because it is already being called in the BallManager.
+         }*/
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -75,5 +80,7 @@ namespace WpfApp1.Prezentacja.ViewModel
         }
     }
 
-
 }
+
+
+
